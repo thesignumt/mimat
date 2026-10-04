@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mimat"
+version = "0.1.0"
+description = "A small mathematical expression language"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MIT"
+authors = [
+    { name = "thesignumt" },
+]
+keywords = ["math", "calculator", "expression", "language", "repl"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+
+[project.urls]
+Repository = "https://github.com/thesignumt/mimat"
+Issues = "https://github.com/thesignumt/mimat/issues"
+
+[project.scripts]
+mimat = "mimat.repl:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
