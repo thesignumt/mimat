@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import sys
+from .lexer import Lexer, TokenKind
 
 
 def run() -> None:
@@ -8,10 +9,14 @@ def run() -> None:
 
     while True:
         try:
-            expression = input(">>> ")
+            src = input(">>> ")
         except (EOFError, KeyboardInterrupt):
             print("bye!")
             break
+
+        tokens = Lexer(src).tokenize()
+        if tokens[0].kind != TokenKind.ERROR:
+            __import__("pprint").pprint(tokens)
 
 
 def main() -> None:
