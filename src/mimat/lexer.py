@@ -16,6 +16,10 @@ class Token:
     value: str
 
 
+def err(msg: str) -> Token:
+    return Token(TokenKind.ERROR, msg)
+
+
 class Lexer:
     def __init__(self, source: str) -> None:
         self.src = source
@@ -43,8 +47,11 @@ class Lexer:
                 tokens.append(self._single_char(TokenKind.PLUS))
                 continue
 
-            print(f"unexpected character {c!r} at position {self.pos}")
-            return [Token(TokenKind.ERROR, "")]
+            return [
+                err(
+                    f"unexpected {c!r} at position {self.pos}",
+                )
+            ]
 
         return tokens
 

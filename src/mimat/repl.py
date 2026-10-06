@@ -15,7 +15,10 @@ def run() -> None:
             break
 
         tokens = Lexer(src).tokenize()
-        if tokens[0].kind != TokenKind.ERROR:
+        t0 = tokens[0]
+        if t0.kind == TokenKind.ERROR:
+            print(t0.value)
+        else:
             __import__("pprint").pprint(tokens)
 
 
