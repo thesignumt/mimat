@@ -8,6 +8,8 @@ class TokenKind(Enum):
     IDENTIFIER = auto()
     PLUS = auto()
 
+    EOF = auto()
+
 
 @dataclass(frozen=True)
 class Token:
