@@ -1,11 +1,14 @@
 from __future__ import annotations
+import importlib.metadata
+
+MIMAT_VER = importlib.metadata.version("mimat")
 
 import sys
 from .lexer import Lexer, TokenKind
 
 
 def run() -> None:
-    print("mimat")
+    print(f"mimat v{MIMAT_VER}")
 
     while True:
         try:
