@@ -11,7 +11,7 @@ def run() -> None:
         try:
             src = input(">>> ")
         except (EOFError, KeyboardInterrupt):
-            print("bye!")
+            print("\nbye!")
             break
 
         tokens = Lexer(src).tokenize()
