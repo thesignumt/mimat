@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
+from .error import LexerError, MimatError
 
 
 class TokenKind(Enum):
@@ -7,28 +8,32 @@ class TokenKind(Enum):
     IDENTIFIER = auto()
     PLUS = auto()
 
-    ERROR = auto()
-
 
 @dataclass(frozen=True)
 class Token:
     kind: TokenKind
     value: str
-
-
-def err(msg: str) -> Token:
-    return Token(TokenKind.ERROR, msg)
+    start: int
+    end: int
 
 
 class Lexer:
     def __init__(self, source: str) -> None:
-        self.src = source
+        self.source = source
         self.pos = 0
+
+    def error(self, message: str) -> MimatError:
+        return LexerError(
+            message,
+            source=self.source,
+            start=self.pos,
+            end=self.pos + 1,
+        )
 
     def tokenize(self) -> list[Token]:
         tokens: list[Token] = []
 
-        while self.pos < len(self.src):
+        while self.pos < len(self.source):
             c = self._peek()
 
             if c.isspace():
@@ -47,41 +52,48 @@ class Lexer:
                 tokens.append(self._single_char(TokenKind.PLUS))
                 continue
 
-            return [
-                err(
-                    f"unexpected {c!r} at position {self.pos}",
-                )
-            ]
+            raise self.error(f"Unexpected character {c!r}")
 
         return tokens
 
     def read_number(self) -> Token:
         start = self.pos
 
-        while self.pos < len(self.src) and self._peek().isdecimal():
+        while self.pos < len(self.source) and self._peek().isdecimal():
             self._advance()
 
-        return Token(TokenKind.NUMBER, self.src[start : self.pos])
+        return Token(TokenKind.NUMBER, self.source[start : self.pos], start, self.pos)
 
     def read_identifier(self) -> Token:
         start = self.pos
 
-        while (
-            self.pos < len(self.src)
-            and self._peek().isascii()
-            and self._peek().isalpha()
-        ):
+        if self._peek() == "\\":
             self._advance()
 
-        return Token(TokenKind.IDENTIFIER, self.src[start : self.pos])
+            while (
+                self.pos < len(self.source)
+                and self._peek().isascii()
+                and self._peek().isalpha()
+            ):
+                self._advance()
+
+        else:
+            self._advance()
+
+        return Token(
+            TokenKind.IDENTIFIER, self.source[start : self.pos], start, self.pos
+        )
 
     def _peek(self) -> str:
-        return self.src[self.pos]
+        return self.source[self.pos]
 
     def _advance(self) -> str:
-        c = self.src[self.pos]
+        c = self.source[self.pos]
         self.pos += 1
         return c
 
     def _single_char(self, kind: TokenKind) -> Token:
-        return Token(kind, self._advance())
+        start = self.pos
+        value = self._advance()
+
+        return Token(kind, value, start, self.pos)

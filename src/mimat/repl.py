@@ -1,6 +1,8 @@
 from __future__ import annotations
 import importlib.metadata
 
+from .error import MimatError
+
 MIMAT_VER = importlib.metadata.version("mimat")
 
 import sys
@@ -17,12 +19,13 @@ def run() -> None:
             print("\nbye!")
             break
 
-        tokens = Lexer(src).tokenize()
-        t0 = tokens[0]
-        if t0.kind == TokenKind.ERROR:
-            print(t0.value)
-        else:
-            __import__("pprint").pprint(tokens)
+        try:
+            tokens = Lexer(src).tokenize()
+        except MimatError as exc:
+            print(f"error: {exc}")
+            continue
+
+        __import__("pprint").pprint(tokens)
 
 
 def main() -> None:
