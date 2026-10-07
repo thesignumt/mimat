@@ -18,7 +18,9 @@ def run() -> None:
         try:
             src = input(">>> ").strip()
         except (EOFError, KeyboardInterrupt):
-            print("\nbye!")
+            break
+
+        if src[-1] == "\x04":
             break
 
         if not src:
@@ -33,6 +35,8 @@ def run() -> None:
             continue
 
         ic(tokens[:-1], ast)
+
+    print("\nbye!")
 
 
 def main() -> None:
