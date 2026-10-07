@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum, auto
+
 from .error import LexerError, MimatError
 
 
@@ -46,7 +47,7 @@ class Lexer:
                 tokens.append(self.read_number())
                 continue
 
-            if c.isascii() and c.isalpha():  # only allow A-Z/a-z
+            if (c.isascii() and c.isalpha()) or c == "\\":
                 tokens.append(self.read_identifier())
                 continue
 
@@ -55,6 +56,8 @@ class Lexer:
                 continue
 
             raise self.error(f"Unexpected character {c!r}")
+
+        tokens.append(Token(TokenKind.EOF, "", self.pos, self.pos))
 
         return tokens
 
@@ -77,18 +80,26 @@ class Lexer:
         if self._peek() == "\\":
             self._advance()
 
-            while (
-                self.pos < len(self.source)
-                and self._peek().isascii()
-                and self._peek().isalpha()
-            ):
-                self._advance()
+            if self.pos >= len(self.source):
+                raise self.error("Expected identifier after '\\'")
 
-        else:
+            if not self._peek().isascii() or not self._peek().isalpha():
+                raise self.error("Expected letter after '\\'")
+
+        self._advance()
+
+        while (
+            self.pos < len(self.source)
+            and self._peek().isascii()
+            and self._peek().isalpha()
+        ):
             self._advance()
 
         return Token(
-            TokenKind.IDENTIFIER, self.source[start : self.pos], start, self.pos
+            TokenKind.IDENTIFIER,
+            self.source[start : self.pos],
+            start,
+            self.pos,
         )
 
     def _peek(self) -> str:
