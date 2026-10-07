@@ -1,12 +1,14 @@
 from __future__ import annotations
 import importlib.metadata
+from icecream import ic
 
-from .error import MimatError
 
 MIMAT_VER = importlib.metadata.version("mimat")
 
 import sys
+from .error import MimatError
 from .lexer import Lexer, TokenKind
+from .parser import Parser
 
 
 def run() -> None:
@@ -25,11 +27,12 @@ def run() -> None:
 
         try:
             tokens = Lexer(src).tokenize()
+            ast = Parser(src, tokens).parse()
         except MimatError as exc:
             print(f"error: {exc}")
             continue
 
-        __import__("pprint").pprint(tokens)
+        ic(tokens[:-1], ast)
 
 
 def main() -> None:
