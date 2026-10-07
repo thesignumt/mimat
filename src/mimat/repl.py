@@ -14,10 +14,14 @@ def run() -> None:
 
     while True:
         try:
-            src = input(">>> ")
+            src = input(">>> ").strip()
         except (EOFError, KeyboardInterrupt):
             print("\nbye!")
             break
+
+        if not src:
+            print()
+            continue
 
         try:
             tokens = Lexer(src).tokenize()
