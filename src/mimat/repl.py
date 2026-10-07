@@ -29,12 +29,12 @@ def run() -> None:
 
         try:
             tokens = Lexer(src).tokenize()
-            ast = Parser(src, tokens).parse()
+            node = Parser(src, tokens).parse()
         except MimatError as exc:
             print(f"error: {exc}")
             continue
 
-        ic(tokens[:-1], ast)
+        ic(tokens[:-1], node)
 
     print("\nbye!")
 
