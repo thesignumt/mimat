@@ -1,4 +1,4 @@
-from .ast import BinaryExpr, Identifier, Node, Number
+from .nodes import BinaryExpr, Identifier, Node, Number
 from .error import ParserError
 from .lexer import Token, TokenKind
 
