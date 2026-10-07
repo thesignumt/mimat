@@ -64,7 +64,12 @@ class Lexer:
         while self.pos < len(self.source) and self._peek().isdecimal():
             self._advance()
 
-        return Token(TokenKind.NUMBER, self.source[start : self.pos], start, self.pos)
+        return Token(
+            TokenKind.NUMBER,
+            self.source[start : self.pos],
+            start,
+            self.pos,
+        )
 
     def read_identifier(self) -> Token:
         start = self.pos

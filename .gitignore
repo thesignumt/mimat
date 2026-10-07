@@ -1,4 +1,5 @@
 *.ps1
+dooing.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
