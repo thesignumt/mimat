@@ -8,6 +8,7 @@ class TokenKind(Enum):
     NUMBER = auto()
     IDENTIFIER = auto()
     PLUS = auto()
+    MINUS = auto()
 
     EOF = auto()
 
@@ -21,6 +22,11 @@ class Token:
 
 
 class Lexer:
+    SINGLE_CHAR_TOKENS = {
+        "+": TokenKind.PLUS,
+        "-": TokenKind.MINUS,
+    }
+
     def __init__(self, source: str) -> None:
         self.source = source
         self.pos = 0
@@ -51,8 +57,9 @@ class Lexer:
                 tokens.append(self.read_identifier())
                 continue
 
-            if c == "+":
-                tokens.append(self._single_char(TokenKind.PLUS))
+            kind = self.SINGLE_CHAR_TOKENS.get(c)
+            if kind is not None:
+                tokens.append(self._single_char(kind))
                 continue
 
             raise self.error(f"Unexpected character {c!r}")

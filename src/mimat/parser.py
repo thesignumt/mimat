@@ -31,15 +31,17 @@ class Parser:
     def parse_expression(self) -> Node:
         left = self.parse_value()
 
-        while self.current.kind == TokenKind.PLUS:
-            self._eat(TokenKind.PLUS)
+        while self.current.kind in (TokenKind.PLUS, TokenKind.MINUS):
+            operator = self.current.kind
+            self._eat(operator)
+
             right = self.parse_value()
 
             left = BinaryExpr(
                 start=left.start,
                 end=right.end,
                 left=left,
-                operator=TokenKind.PLUS,
+                operator=operator,
                 right=right,
             )
 
