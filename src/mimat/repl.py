@@ -2,6 +2,7 @@ from __future__ import annotations
 import importlib.metadata
 from icecream import ic
 import sys
+import argparse
 
 from .error import MimatError
 from .lexer import Lexer, TokenKind
@@ -9,11 +10,11 @@ from .parser import Parser
 from .evaluator import evaluate
 
 
-MIMAT_VER = importlib.metadata.version("mimat")
+__version__ = importlib.metadata.version("mimat")
 
 
-def run_mimat() -> None:
-    print(f"mimat v{MIMAT_VER}")
+def run_mimat(*, verbose: bool | None = False) -> None:
+    print(f"mimat v{__version__}")
 
     while True:
         try:
@@ -43,8 +44,16 @@ def run_mimat() -> None:
 
 def main() -> None:
     """main entry point for mimat cmd."""
+    parser = argparse.ArgumentParser(prog="mimat")
+    parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument(
+        "-V", "--version", action="version", version=f"%(prog)s v{__version__}"
+    )
+
+    args = parser.parse_args()
+
     try:
-        run_mimat()
+        run_mimat(verbose=args.verbose)
     except Exception as exc:
         print(f"mimat: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc
