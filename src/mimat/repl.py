@@ -37,7 +37,10 @@ def run_mimat(*, verbose: bool | None = False) -> None:
             print(f"error: {exc}")
             continue
 
-        ic(tokens[:-1], node, result)
+        if verbose:
+            ic(tokens[:-1], node)
+
+        print(result)
 
     print("\nbye!")
 
