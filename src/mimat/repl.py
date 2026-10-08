@@ -1,14 +1,15 @@
 from __future__ import annotations
 import importlib.metadata
 from icecream import ic
-
-
-MIMAT_VER = importlib.metadata.version("mimat")
-
 import sys
+
 from .error import MimatError
 from .lexer import Lexer, TokenKind
 from .parser import Parser
+from .evaluator import evaluate
+
+
+MIMAT_VER = importlib.metadata.version("mimat")
 
 
 def run_mimat() -> None:
@@ -16,7 +17,7 @@ def run_mimat() -> None:
 
     while True:
         try:
-            src = input(">>> ").strip()
+            src = input("mimat> ").strip()
         except (EOFError, KeyboardInterrupt):
             break
 
@@ -30,11 +31,12 @@ def run_mimat() -> None:
         try:
             tokens = Lexer(src).tokenize()
             node = Parser(src, tokens).parse()
+            result = evaluate(node)
         except MimatError as exc:
             print(f"error: {exc}")
             continue
 
-        ic(tokens[:-1], node)
+        ic(tokens[:-1], node, result)
 
     print("\nbye!")
 
