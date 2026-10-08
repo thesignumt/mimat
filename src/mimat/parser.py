@@ -1,5 +1,5 @@
 from .nodes import BinaryExpr, Identifier, Node, Number
-from .error import ParserError
+from .error import MimatError
 from .lexer import Token, TokenKind
 
 
@@ -13,10 +13,10 @@ class Parser:
     def current(self) -> Token:
         return self.tokens[self.pos]
 
-    def error(self, message: str) -> ParserError:
+    def error(self, message: str) -> MimatError:
         token = self.current
 
-        return ParserError(
+        return MimatError(
             message,
             source=self.source,
             start=token.start,

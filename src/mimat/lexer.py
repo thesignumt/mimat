@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum, auto
 
-from .error import LexerError, MimatError
+from .error import MimatError
 
 
 class TokenKind(Enum):
@@ -26,7 +26,7 @@ class Lexer:
         self.pos = 0
 
     def error(self, message: str) -> MimatError:
-        return LexerError(
+        return MimatError(
             message,
             source=self.source,
             start=self.pos,

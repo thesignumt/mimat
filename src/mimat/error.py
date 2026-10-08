@@ -24,12 +24,3 @@ class MimatError(Exception):
         width = max(1, self.end - self.start)
 
         return f"{message}\n\n  {self.source}\n  {' ' * self.start}{'^' * width}"
-
-
-class LexerError(MimatError): ...
-
-
-class ParserError(MimatError): ...
-
-
-class MimatRuntimeError(MimatError): ...
