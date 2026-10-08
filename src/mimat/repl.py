@@ -11,7 +11,7 @@ from .lexer import Lexer, TokenKind
 from .parser import Parser
 
 
-def run() -> None:
+def run_mimat() -> None:
     print(f"mimat v{MIMAT_VER}")
 
     while True:
@@ -42,7 +42,7 @@ def run() -> None:
 def main() -> None:
     """main entry point for mimat cmd."""
     try:
-        run()
+        run_mimat()
     except Exception as exc:
         print(f"mimat: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc
