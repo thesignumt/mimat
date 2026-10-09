@@ -11,6 +11,8 @@ class TokenKind(Enum):
     MINUS = auto()
     MULTIPLY = auto()
     DIVIDE = auto()
+    LPAREN = auto()
+    RPAREN = auto()
 
     EOF = auto()
 
@@ -29,6 +31,8 @@ class Lexer:
         "-": TokenKind.MINUS,
         "*": TokenKind.MULTIPLY,
         "/": TokenKind.DIVIDE,
+        "(": TokenKind.LPAREN,
+        ")": TokenKind.RPAREN,
     }
 
     def __init__(self, source: str) -> None:

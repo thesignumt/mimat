@@ -28,25 +28,6 @@ class Parser:
         self._eat(TokenKind.EOF)
         return node
 
-    def parse_term(self) -> Node:
-        left = self.parse_value()
-
-        while self.current.kind in (TokenKind.MULTIPLY, TokenKind.DIVIDE):
-            operator = self.current.kind
-            self._eat(operator)
-
-            right = self.parse_value()
-
-            left = BinaryExpr(
-                start=left.start,
-                end=right.end,
-                left=left,
-                operator=operator,
-                right=right,
-            )
-
-        return left
-
     def parse_expression(self) -> Node:
         left = self.parse_term()
 
@@ -66,28 +47,44 @@ class Parser:
 
         return left
 
-    def parse_value(self) -> Node:
-        current = self.current
+    def parse_term(self) -> Node:
+        left = self.parse_primary()
 
-        if current.kind == TokenKind.NUMBER:
+        while self.current.kind in (TokenKind.MULTIPLY, TokenKind.DIVIDE):
+            operator = self.current.kind
+            self._eat(operator)
+
+            right = self.parse_primary()
+
+            left = BinaryExpr(
+                start=left.start,
+                end=right.end,
+                left=left,
+                operator=operator,
+                right=right,
+            )
+
+        return left
+
+    def parse_primary(self) -> Node:
+        token = self.current
+
+        if token.kind is TokenKind.NUMBER:
             token = self._eat(TokenKind.NUMBER)
+            return Number(start=token.start, end=token.end, value=int(token.value))
 
-            return Number(
-                start=token.start,
-                end=token.end,
-                value=int(token.value),
-            )
-
-        if current.kind == TokenKind.IDENTIFIER:
+        if token.kind is TokenKind.IDENTIFIER:
             token = self._eat(TokenKind.IDENTIFIER)
+            return Identifier(start=token.start, end=token.end, name=token.value)
 
-            return Identifier(
-                start=token.start,
-                end=token.end,
-                name=token.value,
-            )
+        if token.kind is TokenKind.LPAREN:
+            self._eat(TokenKind.LPAREN)
+            node = self.parse_expression()
+            closing = self._eat(TokenKind.RPAREN)
 
-        raise self.error("Expected a value")
+            return node
+
+        raise self.error("Expected a number, identifier, or '('")
 
     def _eat(self, expected: TokenKind) -> Token:
         current = self.current
