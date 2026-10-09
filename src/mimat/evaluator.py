@@ -7,6 +7,8 @@ from .error import MimatError
 OPERATORS = {
     TokenKind.PLUS: lambda a, b: a + b,
     TokenKind.MINUS: lambda a, b: a - b,
+    TokenKind.MULTIPLY: lambda a, b: a * b,
+    TokenKind.DIVIDE: lambda a, b: a / b,
 }
 
 

@@ -9,6 +9,8 @@ class TokenKind(Enum):
     IDENTIFIER = auto()
     PLUS = auto()
     MINUS = auto()
+    MULTIPLY = auto()
+    DIVIDE = auto()
 
     EOF = auto()
 
@@ -25,6 +27,8 @@ class Lexer:
     SINGLE_CHAR_TOKENS = {
         "+": TokenKind.PLUS,
         "-": TokenKind.MINUS,
+        "*": TokenKind.MULTIPLY,
+        "/": TokenKind.DIVIDE,
     }
 
     def __init__(self, source: str) -> None:

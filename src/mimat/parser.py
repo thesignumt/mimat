@@ -28,14 +28,33 @@ class Parser:
         self._eat(TokenKind.EOF)
         return node
 
-    def parse_expression(self) -> Node:
+    def parse_term(self) -> Node:
         left = self.parse_value()
+
+        while self.current.kind in (TokenKind.MULTIPLY, TokenKind.DIVIDE):
+            operator = self.current.kind
+            self._eat(operator)
+
+            right = self.parse_value()
+
+            left = BinaryExpr(
+                start=left.start,
+                end=right.end,
+                left=left,
+                operator=operator,
+                right=right,
+            )
+
+        return left
+
+    def parse_expression(self) -> Node:
+        left = self.parse_term()
 
         while self.current.kind in (TokenKind.PLUS, TokenKind.MINUS):
             operator = self.current.kind
             self._eat(operator)
 
-            right = self.parse_value()
+            right = self.parse_term()
 
             left = BinaryExpr(
                 start=left.start,
