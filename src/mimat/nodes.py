@@ -23,3 +23,9 @@ class BinaryExpr(Node):
     left: Node
     operator: TokenKind
     right: Node
+
+
+@dataclass(frozen=True)
+class UnaryExpr(Node):
+    operator: TokenKind
+    operand: Node

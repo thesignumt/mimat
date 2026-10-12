@@ -1,4 +1,4 @@
-from .nodes import BinaryExpr, Identifier, Node, Number
+from .nodes import BinaryExpr, Identifier, Node, Number, UnaryExpr
 from .error import MimatError
 from .lexer import Token, TokenKind
 
@@ -48,13 +48,13 @@ class Parser:
         return left
 
     def parse_term(self) -> Node:
-        left = self.parse_primary()
+        left = self.parse_unary()
 
         while self.current.kind in (TokenKind.MULTIPLY, TokenKind.DIVIDE):
             operator = self.current.kind
             self._eat(operator)
 
-            right = self.parse_primary()
+            right = self.parse_unary()
 
             left = BinaryExpr(
                 start=left.start,
@@ -65,6 +65,22 @@ class Parser:
             )
 
         return left
+
+    def parse_unary(self) -> Node:
+        if self.current.kind in (TokenKind.PLUS, TokenKind.MINUS):
+            operator_token = self.current
+            self.pos += 1
+
+            operand = self.parse_unary()
+
+            return UnaryExpr(
+                start=operator_token.start,
+                end=operand.end,
+                operator=operator_token.kind,
+                operand=operand,
+            )
+
+        return self.parse_primary()
 
     def parse_primary(self) -> Node:
         token = self.current

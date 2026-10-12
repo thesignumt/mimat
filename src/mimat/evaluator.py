@@ -1,6 +1,6 @@
 __all__ = ["evaluate"]
 
-from .nodes import Node, Number, Identifier, BinaryExpr
+from .nodes import Node, Number, Identifier, BinaryExpr, UnaryExpr
 from .lexer import TokenKind
 from .error import MimatError
 
@@ -29,5 +29,13 @@ def evaluate(node):
             raise MimatError("unknown operator")
 
         return operation(left, right)
+
+    if isinstance(node, UnaryExpr):
+        operand = evaluate(node.operand)
+
+        if node.operator is TokenKind.MINUS:
+            return -operand
+        if node.operator is TokenKind.PLUS:
+            return +operand
 
     raise MimatError("unknown node")
