@@ -31,14 +31,17 @@ def run_mimat(*, verbose: bool | None = False) -> None:
 
         try:
             tokens = Lexer(src).tokenize()
+            if verbose:
+                ic(tokens[:-1])
+
             node = Parser(src, tokens).parse()
+            if verbose:
+                ic(node)
+
             result = evaluate(node)
         except MimatError as exc:
             print(f"error: {exc}")
             continue
-
-        if verbose:
-            ic(tokens[:-1], node)
 
         print(result)
 
