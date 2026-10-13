@@ -22,9 +22,6 @@ def run_mimat(*, verbose: bool | None = False) -> None:
         except (EOFError, KeyboardInterrupt):
             break
 
-        if src[-1] == "\x04":
-            break
-
         if not src:
             print()
             continue
