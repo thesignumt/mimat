@@ -33,3 +33,6 @@ mimat = "mimat.repl:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.basedpyright]
+typeCheckingMode = "basic"
