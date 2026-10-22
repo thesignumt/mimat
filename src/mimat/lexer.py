@@ -78,9 +78,18 @@ class Lexer:
 
     def read_number(self) -> Token:
         start = self.pos
+        has_dot = False
 
-        while self.pos < len(self.source) and self._peek().isdecimal():
-            self._advance()
+        while self.pos < len(self.source):
+            c = self._peek()
+
+            if c.isdecimal():
+                self._advance()
+            elif c == "." and not has_dot:
+                has_dot = True
+                self._advance()
+            else:
+                break
 
         return Token(
             TokenKind.NUMBER,
