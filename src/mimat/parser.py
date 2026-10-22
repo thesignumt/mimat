@@ -94,9 +94,9 @@ class Parser:
             return Identifier(start=token.start, end=token.end, name=token.value)
 
         if token.kind is TokenKind.LPAREN:
-            _ = self._eat(TokenKind.LPAREN)
+            self._eat(TokenKind.LPAREN)
             node = self.parse_expression()
-            _ = self._eat(TokenKind.RPAREN)
+            self._eat(TokenKind.RPAREN)
 
             return node
 
