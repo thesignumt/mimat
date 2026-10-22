@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from fractions import Fraction
 from .lexer import TokenKind
 
 
@@ -10,7 +11,7 @@ class Node:
 
 @dataclass(frozen=True)
 class Number(Node):
-    value: int
+    value: Fraction
 
 
 @dataclass(frozen=True)

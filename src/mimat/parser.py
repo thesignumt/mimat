@@ -1,6 +1,7 @@
 from .nodes import BinaryExpr, Identifier, Node, Number, UnaryExpr
 from .error import MimatError
 from .lexer import Token, TokenKind
+from .numbers import tok_to_frac
 
 
 class Parser:
@@ -87,7 +88,9 @@ class Parser:
 
         if token.kind is TokenKind.NUMBER:
             token = self._eat(TokenKind.NUMBER)
-            return Number(start=token.start, end=token.end, value=int(token.value))
+            return Number(
+                start=token.start, end=token.end, value=tok_to_frac(token.value)
+            )
 
         if token.kind is TokenKind.IDENTIFIER:
             token = self._eat(TokenKind.IDENTIFIER)
